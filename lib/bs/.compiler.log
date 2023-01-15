@@ -1,0 +1,17 @@
+#Start(1673793220868)
+
+  Warning number 27
+  /Users/sergey/code/rescript/helloworld/src/HelloWorld.res:30:13-17
+
+  28 │ // This is the main callback to generate the virtual-dom.
+  29 │ // This returns a virtual-dom node that becomes the view, only changes 
+     │ from call-to-call are set on the real DOM for efficiency, this is also 
+     │ only called once per frame even with many messages sent in within that 
+     │ frame, otherwise does nothing
+  30 │ let view = (model: model): Vdom.t<msg> =>
+  31 │   div(
+  32 │     list{Attributes.class("wrapper")},
+
+  unused variable model.
+
+#Done(1673793220920)

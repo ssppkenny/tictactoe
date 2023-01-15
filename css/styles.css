@@ -1,0 +1,131 @@
+.wrapper {
+    border-width: 0px;
+    width: 200px;
+    margin-inline: auto;
+}
+
+.row {
+    display: table;
+}
+
+.right_middle {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-width: 0px;
+    border-left-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.center_middle {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.right_lower {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-bottom-width: 0px;
+    border-top-width: 1px;
+    border-right-width: 0px;
+    border-left-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.center_lower {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-bottom-width: 0px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.left_lower {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-bottom-width: 0px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-left-width: 0px;
+    border-style: solid;
+    border-color: black;
+}
+.left_middle {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-left-width: 0px;
+    border-style: solid;
+    border-color: black;
+}
+.left_upper {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-bottom-width: 1px;
+    border-top-width: 0px;
+    border-right-width: 1px;
+    border-left-width: 0px;
+    border-style: solid;
+    border-color: black;
+}
+
+.right_upper {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-top-width: 0px;
+    border-bottom-width: 1px;
+    border-right-width: 0px;
+    border-left-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+.center_upper {
+    display: table-cell;
+    width: 50px;
+    height: 50px;
+    border-top-width: 0px;
+    border-bottom-width: 1px;
+    border-right-width: 1px;
+    border-left-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+
+div.cross {
+    vertical-align: middle;
+    text-align: center;
+    color:black;
+    padding: 0px;
+    width:48px;
+    height:48px;
+    line-height: 48px;
+    font-size: 48px;
+}
+div.circle {
+    vertical-align: middle;
+    text-align: center;
+    color: red;
+    padding: 0px;
+    width:48px;
+    height:48px;
+    line-height: 48px;
+    font-size: 48px;
+}

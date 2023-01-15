@@ -1,0 +1,14 @@
+rescript = 1
+g_finger := /Users/sergey/code/rescript/helloworld/node_modules/rescript-tea/lib/ocaml/install.stamp
+rule astj
+  command = /Users/sergey/code/rescript/helloworld/node_modules/rescript/darwin/bsc.exe  -bs-v 10.0.1  -absname -bs-ast -o $out $i
+o src/HelloWorld.ast : astj ../../src/HelloWorld.res
+rule deps
+  command = /Users/sergey/code/rescript/helloworld/node_modules/rescript/darwin/bsb_helper.exe -hash 96cd17fdb4f11ce7a51b2a346f5f0d8d $in
+  restat = 1
+o src/HelloWorld.d : deps src/HelloWorld.ast
+rule mij
+  command = /Users/sergey/code/rescript/helloworld/node_modules/rescript/darwin/bsc.exe -I src -I /Users/sergey/code/rescript/helloworld/node_modules/rescript-tea/lib/ocaml   -bs-package-name helloworld -bs-package-output commonjs:$in_d:.bs.js -bs-v $g_finger $i
+  dyndep = 1
+  restat = 1
+o src/HelloWorld.cmj src/HelloWorld.cmi ../../src/HelloWorld.bs.js : mij src/HelloWorld.ast
