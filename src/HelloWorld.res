@@ -3,23 +3,35 @@ open Tea.App
 
 // This opens the Elm-style virtual-dom functions and types into the current scope
 open Tea.Html
-
+open Belt
 // Let's create a new type here to be our main message type that is passed around
 type msg = Coords(int, int) // This will be our message to increment the counter
 
 // the model for Counter is just an integer
-type model = array<array<int>>
+type model = list<list<(string, int)>>
 
 // This is optional for such a simple example, but it is good to have an `init` function to define your initial model default values
-let init = () => [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+let init = () => list{
+  list{("left_upper", 0), ("center_upper", 0), ("right_upper", 0)},
+  list{("left_middle", 0), ("center_middle", 1), ("right_middle", 0)},
+  list{("left_lower", 0), ("center_lower", 0), ("right_lower", 0)},
+}
 
 // This is the central message handler, it takes the model as the first argument
 let update = (model: model, msg: msg): model =>
   switch msg {
-  | Coords(i, j) => {
-      model[i][j] = 1
-      model
-    }
+  | Coords(i, j) =>
+    let m = model->List.mapWithIndex((n, x) =>
+      x->List.mapWithIndex((m, y) => {
+        let (a, _) = y
+        if n == i && m == j {
+          (a, 1)
+        } else {
+          (a, 0)
+        }
+      })
+    )
+    m
   }
 
 // This is just a helper function for the view, a simple function that returns a button based on some argument
@@ -33,35 +45,23 @@ let view = (model: model): Vdom.t<msg> =>
     list{
       div(
         list{Attributes.class("field")},
-        list{
+        model->List.map(x =>
           div(
             list{Attributes.class("row")},
-            list{
-              div(list{Attributes.class("left_upper")}, list{}),
-              div(list{Attributes.class("center_upper")}, list{}),
-              div(list{Attributes.class("right_upper")}, list{}),
-            },
-          ),
-          div(
-            list{Attributes.class("row")},
-            list{
-              div(list{Attributes.class("left_middle")}, list{}),
+            x->List.map(y => {
+              let (s, v) = y
+              let t = if v == 0 {
+                "o"
+              } else {
+                "x"
+              }
               div(
-                list{Attributes.class("center_middle")},
-                list{div(list{Attributes.class("circle")}, list{text("x")})},
-              ),
-              div(list{Attributes.class("right_middle")}, list{}),
-            },
-          ),
-          div(
-            list{Attributes.class("row")},
-            list{
-              div(list{Attributes.class("left_lower")}, list{}),
-              div(list{Attributes.class("center_lower")}, list{}),
-              div(list{Attributes.class("right_lower")}, list{}),
-            },
-          ),
-        },
+                list{Attributes.class(s)},
+                list{div(list{Attributes.class("circle")}, list{text(t)})},
+              )
+            }),
+          )
+        ),
       ),
     },
   )
