@@ -8,30 +8,42 @@ open Belt
 type msg = Coords(int, int) // This will be our message to increment the counter
 
 // the model for Counter is just an integer
-type model = list<list<(string, int)>>
+type state = list<list<(string, int)>>
+type model = {
+  state: list<list<(string, int)>>,
+  move: bool,
+}
 
 // This is optional for such a simple example, but it is good to have an `init` function to define your initial model default values
-let init = () => list{
-  list{("left_upper", 0), ("center_upper", 0), ("right_upper", 0)},
-  list{("left_middle", 0), ("center_middle", 1), ("right_middle", 0)},
-  list{("left_lower", 0), ("center_lower", 0), ("right_lower", 0)},
+let init = () => {
+  state: list{
+    list{("left_upper", 0), ("center_upper", 0), ("right_upper", 0)},
+    list{("left_middle", 0), ("center_middle", 1), ("right_middle", 0)},
+    list{("left_lower", 0), ("center_lower", 0), ("right_lower", 0)},
+  },
+  move: false,
 }
 
 // This is the central message handler, it takes the model as the first argument
 let update = (model: model, msg: msg): model =>
   switch msg {
   | Coords(i, j) =>
-    let m = model->List.mapWithIndex((n, x) =>
+    let s = model.state->List.mapWithIndex((n, x) =>
       x->List.mapWithIndex((m, y) => {
-        let (a, _) = y
-        if n == i && m == j {
-          (a, 1)
+        let (a, v) = y
+        let p = if model.move {
+          1
         } else {
-          (a, 0)
+          2
+        }
+        if n == i && m == j {
+          (a, p)
+        } else {
+          (a, v)
         }
       })
     )
-    m
+    {state: s, move: !model.move}
   }
 
 // This is just a helper function for the view, a simple function that returns a button based on some argument
@@ -45,18 +57,20 @@ let view = (model: model): Vdom.t<msg> =>
     list{
       div(
         list{Attributes.class("field")},
-        model->List.map(x =>
+        model.state->List.mapWithIndex((i, x) =>
           div(
             list{Attributes.class("row")},
-            x->List.map(y => {
+            x->List.mapWithIndex((j, y) => {
               let (s, v) = y
               let t = if v == 0 {
-                "o"
-              } else {
+                ""
+              } else if v == 1 {
                 "x"
+              } else {
+                "o"
               }
               div(
-                list{Attributes.class(s)},
+                list{Attributes.class(s), Events.onClick(Coords(i, j))},
                 list{div(list{Attributes.class("circle")}, list{text(t)})},
               )
             }),
