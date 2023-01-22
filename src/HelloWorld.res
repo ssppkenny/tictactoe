@@ -24,6 +24,50 @@ let init = () => {
   move: false,
 }
 
+let freePos = (s: state) => {
+  let fp = []
+  s->List.forEachWithIndex((i, x) => {
+    x->List.forEachWithIndex((j, y) => {
+      let (_, v) = y
+      if v == 0 {
+        Js.Array.push((i, j), fp)->ignore
+      }
+    })
+  })
+  fp
+}
+
+let nextMove = (m: model, fp: array<(int, int)>) => {
+  let s = m.state
+  let l = Array.length(fp)
+  let mv = m.move
+  let r = Js.Math.random_int(0, l)
+  let opt = fp->Array.get(r)
+
+  let retVal = opt->Option.map(x => {
+    let (i, j) = x
+    let ns = s->List.mapWithIndex((n, x) => {
+      x->List.mapWithIndex(
+        (m, y) => {
+          let (a, v) = y
+          if n == i && m == j {
+            if mv {
+              (a, 2)
+            } else {
+              (a, 1)
+            }
+          } else {
+            (a, v)
+          }
+        },
+      )
+    })
+    ns
+  })
+
+  Option.getWithDefault(retVal, s)
+}
+
 // This is the central message handler, it takes the model as the first argument
 let update = (model: model, msg: msg): model =>
   switch msg {
@@ -43,7 +87,9 @@ let update = (model: model, msg: msg): model =>
         }
       })
     )
-    {state: s, move: !model.move}
+    let fp = freePos(s)
+    let nm: state = nextMove({state: s, move: model.move}, fp)
+    {state: nm, move: model.move}
   }
 
 // This is just a helper function for the view, a simple function that returns a button based on some argument
