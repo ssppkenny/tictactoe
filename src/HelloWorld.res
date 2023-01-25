@@ -24,6 +24,12 @@ let init = () => {
   move: false,
 }
 
+let toCheck = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [2,4,6], [0,4,8]]
+
+let coords = [[(0,0), (0,1), (0,2)], [(1,0), (1,1), (1,2)], [(2,0), (2,1), (2,2)], [(0,0), (1,0), (2,0)], 
+     [(0,1), (1,1), (2,1)], [(0,2), (1,2), (2,2)], [(0,2), (1,1), (2,0)], [(0,0), (1,1), (2,2)] 
+]
+
 let freePos = (s: state) => {
   let fp = []
   s->List.forEachWithIndex((i, x) => {
@@ -35,6 +41,39 @@ let freePos = (s: state) => {
     })
   })
   fp
+}
+
+let areSame = (r: array<int>) => {
+	let a = r->Array.getUnsafe(0)
+	let b = r->Array.getUnsafe(1)
+	let c = r->Array.getUnsafe(2)
+	a == b && b == c && a > 0 
+}
+let check = (m: model) => {
+	let s = m.state
+	let row = []
+	s->List.forEachWithIndex((_,x) => {
+		x->List.forEachWithIndex((_,y) => {
+			let (_, v) = y
+			Js.Array.push(v, row)->ignore
+      })
+  })
+	
+	let a = toCheck->Array.map((x) => {
+    let e1 = x->Array.getUnsafe(0)
+    let e2 = x->Array.getUnsafe(1)
+    let e3 = x->Array.getUnsafe(2)
+    areSame([row->Array.getUnsafe(e1), row->Array.getUnsafe(e2), row->Array.getUnsafe(e3)])
+  })
+
+	let opt = a->Array.getIndexBy((x) => x)
+	let ind = opt->Option.getWithDefault(-1)
+	if ind > 0 {
+		coords[ind]
+	} else {
+		None
+	}
+
 }
 
 let nextMove = (m: model, fp: array<(int, int)>) => {
@@ -87,9 +126,17 @@ let update = (model: model, msg: msg): model =>
         }
       })
     )
-    let fp = freePos(s)
-    let nm: state = nextMove({state: s, move: model.move}, fp)
-    {state: nm, move: model.move}
+    let opt = check(model)
+    let sameCoords = opt->Option.getWithDefault([])
+
+    if (Array.length(sameCoords) == 0) {
+      let fp = freePos(s)
+      let nm: state = nextMove({state: s, move: model.move}, fp)
+      {state: nm, move: model.move}
+    } else {
+      model
+    }
+
   }
 
 // This is just a helper function for the view, a simple function that returns a button based on some argument
