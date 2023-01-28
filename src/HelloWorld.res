@@ -12,6 +12,7 @@ type state = list<list<(string, int)>>
 type model = {
   state: list<list<(string, int)>>,
   move: bool,
+  winnerCoords : array<(int,int)>
 }
 
 // This is optional for such a simple example, but it is good to have an `init` function to define your initial model default values
@@ -22,6 +23,7 @@ let init = () => {
     list{("left_lower", 0), ("center_lower", 0), ("right_lower", 0)},
   },
   move: false,
+  winnerCoords: []
 }
 
 let toCheck = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [2,4,6], [0,4,8]]
@@ -131,10 +133,10 @@ let update = (model: model, msg: msg): model =>
 
     if (Array.length(sameCoords) == 0) {
       let fp = freePos(s)
-      let nm: state = nextMove({state: s, move: model.move}, fp)
-      {state: nm, move: model.move}
+      let nm: state = nextMove({state: s, move: model.move, winnerCoords: []}, fp)
+      {state: nm, move: model.move, winnerCoords: []}
     } else {
-      model
+		{...model, winnerCoords: sameCoords}
     }
 
   }
