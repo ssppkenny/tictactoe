@@ -125,10 +125,6 @@ let nextMove = (m: model) => {
 
 // This is the central message handler, it takes the model as the first argument
 let update = (model: model, msg: msg) => {
-  let opt1 = check(model)
-  let sameCoords1 = opt1->Option.getWithDefault([])
-  Js.Console.log(Array.length(sameCoords1))
-  Js.Console.log("test")
   switch msg {
   | Coords(i, j) => {
       let s = model.state->List.mapWithIndex((n, x) =>
@@ -155,6 +151,8 @@ let update = (model: model, msg: msg) => {
         let fp = freePos(s)
         let nc = nextCoords(newModel, fp)
         if nc->Option.isNone {
+          ({...newModel, winnerCoords: sameCoords}, Cmd.none)
+        } else if Array.length(sameCoords) > 0 {
           ({...newModel, winnerCoords: sameCoords}, Cmd.none)
         } else {
           let (x, y) = nc->Option.getWithDefault((-1, -1))
