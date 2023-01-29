@@ -1,5 +1,5 @@
 {
-    "name": "helloworld",
+    "name": "tictactoe",
     "sources": [
         {
             "dir": "src",
@@ -13,5 +13,7 @@
         }
     ],
     "suffix": ".bs.js",
-    "bs-dependencies": ["rescript-tea"]
+    "bs-dependencies": [
+        "rescript-tea"
+    ]
 }

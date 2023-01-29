@@ -1,1 +1,1 @@
-var app = require("./HelloWorld.bs.js").main(document.getElementById("content"));
+var app = require("./tictactoe.bs.js").main(document.getElementById("content"));
