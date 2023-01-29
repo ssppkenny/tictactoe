@@ -1,25 +1,25 @@
 #content {
     position: absolute;
-    top: 40%;
+    top: 30%;
     left: 45%;
 }
 
 .wrapper {
     border-width: 0px;
-    width: 150px;
-    height: 150px;
+    width: 300px;
+    height: 300px;
     margin-inline: auto;
 }
 
 div.row {
     display: table;
-    height: 50px;
+    height: 100px;
 }
 
 .right_middle {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-style: solid;
     border-width: 1px;
     border-right-style: none;
@@ -28,8 +28,8 @@ div.row {
 
 .center_middle {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-color: black;
@@ -37,8 +37,8 @@ div.row {
 
 .right_lower {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-right-style: none;
@@ -48,8 +48,8 @@ div.row {
 
 .center_lower {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-bottom-style: none;
@@ -58,8 +58,8 @@ div.row {
 
 .left_lower {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-left-style: none;
@@ -69,8 +69,8 @@ div.row {
 
 .left_middle {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-left-style: none;
@@ -79,8 +79,8 @@ div.row {
 
 .left_upper {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-left-style: none;
@@ -90,8 +90,8 @@ div.row {
 
 .right_upper {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-top-style: none;
@@ -101,8 +101,8 @@ div.row {
 
 .center_upper {
     display: table-cell;
-    width: 50px;
-    height: 50px;
+    width: 100px;
+    height: 100px;
     border-width: 1px;
     border-style: solid;
     border-top-style: none;
@@ -116,10 +116,10 @@ div.cross {
     color: black;
     padding: 0px;
     border-width: 0px;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 50px;
+    width: 100px;
+    height: 100x;
+    line-height: 100px;
+    font-size: 100px;
 }
 
 div.circle {
@@ -129,10 +129,10 @@ div.circle {
     color: red;
     padding: 0px;
     border-width: 0px;
-    width: 50px;
-    height: 50px;
-    line-height: 50px;
-    font-size: 50px;
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+    font-size: 100px;
 }
 
 div.winner {
