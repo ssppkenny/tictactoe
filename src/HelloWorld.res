@@ -1,11 +1,7 @@
 // This line opens the Tea.App modules into the current scope for Program access functions and types
 //
 open Tea
-open Tea.App
-open Tea_html.Attributes
-open Tea_html.Events
 open Tea.Html
-open Tea.Mouse
 open Tea.App
 
 // This opens the Elm-style virtual-dom functions and types into the current scope
@@ -106,7 +102,7 @@ let check = (m: model) => {
   retVal
 }
 
-let nextCoords = (m: model, fp: array<(int, int)>) => {
+let nextCoords = (fp: array<(int, int)>) => {
   let l = Array.length(fp)
   if l == 0 {
     None
@@ -125,40 +121,45 @@ let nextMove = (m: model) => {
 
 // This is the central message handler, it takes the model as the first argument
 let update = (model: model, msg: msg) => {
-  switch msg {
-  | Coords(i, j) => {
-      let s = model.state->List.mapWithIndex((n, x) =>
-        x->List.mapWithIndex((m, y) => {
-          let (a, v) = y
-          let p = nextMove(model)
-          if n == i && m == j {
-            (a, p)
+  let winnerCoords = model.winnerCoords
+  if winnerCoords->Array.length > 0 {
+    (model, Cmd.none)
+  } else {
+    switch msg {
+    | Coords(i, j) => {
+        let s = model.state->List.mapWithIndex((n, x) =>
+          x->List.mapWithIndex((m, y) => {
+            let (a, v) = y
+            let p = nextMove(model)
+            if n == i && m == j {
+              (a, p)
+            } else {
+              (a, v)
+            }
+          })
+        )
+        let nm = nextMove(model)
+        let newModel = {...model, state: s, move: nm}
+        let opt = check(newModel)
+        let sameCoords = opt->Option.getWithDefault([])
+
+        //
+
+        switch nm {
+        | 1 => ({...newModel, winnerCoords: sameCoords}, Cmd.none)
+        | 2 =>
+          let fp = freePos(s)
+          let nc = nextCoords(fp)
+          if nc->Option.isNone {
+            ({...newModel, winnerCoords: sameCoords}, Cmd.none)
+          } else if Array.length(sameCoords) > 0 {
+            ({...newModel, winnerCoords: sameCoords}, Cmd.none)
           } else {
-            (a, v)
+            let (x, y) = nc->Option.getWithDefault((-1, -1))
+            ({...newModel, winnerCoords: sameCoords}, Cmd.msg(Coords(x, y)))
           }
-        })
-      )
-      let nm = nextMove(model)
-      let newModel = {...model, state: s, move: nm}
-      let opt = check(newModel)
-      let sameCoords = opt->Option.getWithDefault([])
-
-      //
-
-      switch nm {
-      | 1 => ({...newModel, winnerCoords: sameCoords}, Cmd.none)
-      | 2 =>
-        let fp = freePos(s)
-        let nc = nextCoords(newModel, fp)
-        if nc->Option.isNone {
-          ({...newModel, winnerCoords: sameCoords}, Cmd.none)
-        } else if Array.length(sameCoords) > 0 {
-          ({...newModel, winnerCoords: sameCoords}, Cmd.none)
-        } else {
-          let (x, y) = nc->Option.getWithDefault((-1, -1))
-          ({...newModel, winnerCoords: sameCoords}, Cmd.msg(Coords(x, y)))
+        | _ => ({...newModel, winnerCoords: sameCoords}, Cmd.none)
         }
-      | _ => ({...newModel, winnerCoords: sameCoords}, Cmd.none)
       }
     }
   }
@@ -167,7 +168,7 @@ let update = (model: model, msg: msg) => {
 // This is just a helper function for the view, a simple function that returns a button based on some argument
 let viewButton = (title: string, msg: msg) => button(list{Events.onClick(msg)}, list{text(title)})
 
-let subscriptions = model => {
+let subscriptions = _ => {
   Sub.none
 }
 let cellStyle = (i: int, j: int, m: model) => {
