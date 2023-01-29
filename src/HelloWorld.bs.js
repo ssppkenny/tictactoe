@@ -596,8 +596,9 @@ function subscriptions(param) {
   return Tea_sub.none;
 }
 
-function cellStyle(i, j, m) {
+function cellStyle(i, j, m, value) {
   var wc = m.winnerCoords;
+  var style = value === 2 ? "cross" : "circle";
   if (Js_array.findIndex((function (x) {
             return Caml_obj.equal(x, [
                         i,
@@ -607,7 +608,7 @@ function cellStyle(i, j, m) {
     return {
             hd: Tea_html.Attributes.classList({
                   hd: [
-                    "circle",
+                    style,
                     true
                   ],
                   tl: {
@@ -622,7 +623,7 @@ function cellStyle(i, j, m) {
           };
   } else {
     return {
-            hd: Tea_html.Attributes.$$class("circle"),
+            hd: Tea_html.Attributes.$$class(style),
             tl: /* [] */0
           };
   }
@@ -643,7 +644,7 @@ function view(model) {
                                     }, Belt_List.mapWithIndex(x, (function (j, y) {
                                             var v = y[1];
                                             var t = v === 0 ? "" : (
-                                                v === 1 ? "x" : "o"
+                                                v === 1 ? "o" : "x"
                                               );
                                             return Tea_html.div(undefined, undefined, {
                                                         hd: Tea_html.Attributes.$$class(y[0]),
@@ -655,7 +656,7 @@ function view(model) {
                                                           tl: /* [] */0
                                                         }
                                                       }, {
-                                                        hd: Tea_html.div(undefined, undefined, cellStyle(i, j, model), {
+                                                        hd: Tea_html.div(undefined, undefined, cellStyle(i, j, model, v), {
                                                               hd: Tea_html.text(t),
                                                               tl: /* [] */0
                                                             }),

@@ -6,13 +6,14 @@
 
 .wrapper {
     border-width: 0px;
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     margin-inline: auto;
 }
 
-.row {
+div.row {
     display: table;
+    height: 50px;
 }
 
 .right_middle {
@@ -109,10 +110,12 @@
 }
 
 div.cross {
+    display: inline-block;
     vertical-align: middle;
     text-align: center;
     color: black;
     padding: 0px;
+    border-width: 0px;
     width: 50px;
     height: 50px;
     line-height: 50px;
@@ -120,10 +123,12 @@ div.cross {
 }
 
 div.circle {
+    display: inline-block;
     vertical-align: middle;
     text-align: center;
     color: red;
     padding: 0px;
+    border-width: 0px;
     width: 50px;
     height: 50px;
     line-height: 50px;

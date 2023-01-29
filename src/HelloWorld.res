@@ -273,13 +273,18 @@ let viewButton = (title: string, msg: msg) => button(list{Events.onClick(msg)}, 
 let subscriptions = _ => {
   Sub.none
 }
-let cellStyle = (i: int, j: int, m: model) => {
+let cellStyle = (i: int, j: int, m: model, value: int) => {
   let wc = m.winnerCoords
+  let style = if value == 2 {
+    "cross"
+  } else {
+    "circle"
+  }
   if Js.Array.findIndex(x => {x == (i, j)}, wc) >= 0 {
-    let retVal = list{Attributes.classList(list{("circle", true), ("winner", true)})}
+    let retVal = list{Attributes.classList(list{(style, true), ("winner", true)})}
     retVal
   } else {
-    let retVal = list{Attributes.class("circle")}
+    let retVal = list{Attributes.class(style)}
     retVal
   }
 }
@@ -299,13 +304,13 @@ let view = (model: model): Vdom.t<msg> => {
               let t = if v == 0 {
                 ""
               } else if v == 1 {
-                "x"
-              } else {
                 "o"
+              } else {
+                "x"
               }
               div(
                 list{Attributes.class(s), Events.onClick(Coords(i, j))},
-                list{div(cellStyle(i, j, model), list{text(t)})},
+                list{div(cellStyle(i, j, model, v), list{text(t)})},
               )
             }),
           )
