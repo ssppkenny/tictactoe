@@ -21,7 +21,7 @@ type model = {
 let init = () => {
   state: list{
     list{("left_upper", 0), ("center_upper", 0), ("right_upper", 0)},
-    list{("left_middle", 0), ("center_middle", 1), ("right_middle", 0)},
+    list{("left_middle", 0), ("center_middle", 0), ("right_middle", 0)},
     list{("left_lower", 0), ("center_lower", 0), ("right_lower", 0)},
   },
   move: 1,
@@ -119,6 +119,112 @@ let nextMove = (m: model) => {
   }
 }
 
+let isTerminal = (m: model): bool => {
+  let s = m.state
+  let b = s->List.reduce(true, (x, y) => {
+    let rv = y->List.reduce(true, (p, q) => {
+      let (_, v) = q
+      p && v != 0
+    })
+    x && rv
+  })
+  m.winnerCoords->Array.length > 0 || b
+}
+
+let utility = (m: model): int => {
+  if m.winnerCoords->Array.length == 0 {
+    0
+  } else {
+    let (x, y) = m.winnerCoords->Array.getUnsafe(0)
+    let row = m.state->List.get(x)->Option.getWithDefault(list{})
+    let (_, v) = row->List.get(y)->Option.getWithDefault(("", 0))
+    let retVal = if v == 1 {
+      1
+    } else {
+      -1
+    }
+
+    retVal
+  }
+}
+
+let freePosToState = (pos: (int, int), s: state, value: int): state => {
+  let (p, q) = pos
+  s->List.mapWithIndex((i, x) => {
+    x->List.mapWithIndex((j, y) => {
+      let (c, v) = y
+      if i == p && q == j {
+        (c, value)
+      } else {
+        (c, v)
+      }
+    })
+  })
+}
+
+let rec minValue = (m: model): (int, option<(int, int)>) => {
+  if isTerminal(m) {
+    (utility(m), None)
+  } else {
+    let fp = freePos(m.state)
+    let models = fp->Array.map(x => {
+      let nm = nextMove(m)
+      let s = freePosToState(x, m.state, nm)
+      let newModel = {...m, state: s, move: nm}
+      let opt = check(newModel)
+      let sameCoords = opt->Option.getWithDefault([])
+      let model = {state: s, move: nm, winnerCoords: sameCoords}
+      let (value, _) = maxValue(model)
+      (value, Some(x))
+    })
+    let acc = (1000, None)
+    let (v, move) = models->Array.reduce(acc, (a, b) => {
+      let (v1, move1) = a
+      let (v2, move2) = b
+      if v1 < v2 {
+        (v1, move1)
+      } else {
+        (v2, move2)
+      }
+    })
+    (v, move)
+  }
+}
+
+and maxValue = (m: model): (int, option<(int, int)>) => {
+  if isTerminal(m) {
+    (utility(m), None)
+  } else {
+    let fp = freePos(m.state)
+    let models = fp->Array.map(x => {
+      let nm = nextMove(m)
+      let s = freePosToState(x, m.state, nm)
+      let newModel = {...m, state: s, move: nm}
+      let opt = check(newModel)
+      let sameCoords = opt->Option.getWithDefault([])
+      let model = {state: s, move: nm, winnerCoords: sameCoords}
+      let (value, _) = minValue(model)
+      (value, Some(x))
+    })
+    let acc = (-1000, None)
+    let (v, move) = models->Array.reduce(acc, (a, b) => {
+      let (v1, move1) = a
+      let (v2, move2) = b
+      if v1 > v2 {
+        (v1, move1)
+      } else {
+        (v2, move2)
+      }
+    })
+    (v, move)
+  }
+}
+
+let minimaxSearch = (m: model): (int, int) => {
+  let (_, move) = maxValue(m)
+  Js.Console.log(move)
+  move->Option.getWithDefault((-1, -1))
+}
 // This is the central message handler, it takes the model as the first argument
 let update = (model: model, msg: msg) => {
   let winnerCoords = model.winnerCoords
@@ -148,14 +254,10 @@ let update = (model: model, msg: msg) => {
         switch nm {
         | 1 => ({...newModel, winnerCoords: sameCoords}, Cmd.none)
         | 2 =>
-          let fp = freePos(s)
-          let nc = nextCoords(fp)
-          if nc->Option.isNone {
-            ({...newModel, winnerCoords: sameCoords}, Cmd.none)
-          } else if Array.length(sameCoords) > 0 {
+          let (x, y) = minimaxSearch(newModel)
+          if (x, y) == (-1, -1) {
             ({...newModel, winnerCoords: sameCoords}, Cmd.none)
           } else {
-            let (x, y) = nc->Option.getWithDefault((-1, -1))
             ({...newModel, winnerCoords: sameCoords}, Cmd.msg(Coords(x, y)))
           }
         | _ => ({...newModel, winnerCoords: sameCoords}, Cmd.none)
