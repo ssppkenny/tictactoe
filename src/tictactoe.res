@@ -7,7 +7,7 @@ open Tea.App
 // This opens the Elm-style virtual-dom functions and types into the current scope
 open Belt
 // Let's create a new type here to be our main message type that is passed around
-type msg = Coords(int, int) // This will be our message to increment the counter
+type msg = Coords(int, int) | Restart // This will be our message to increment the counter
 
 // the model for Counter is just an integer
 type state = list<list<(string, int)>>
@@ -229,9 +229,13 @@ let minimaxSearch = (m: model): (int, int) => {
 let update = (model: model, msg: msg) => {
   let winnerCoords = model.winnerCoords
   if winnerCoords->Array.length > 0 {
-    (model, Cmd.none)
+    switch msg {
+    | Restart => (init(), Cmd.none)
+    | _ => (model, Cmd.none)
+    }
   } else {
     switch msg {
+    | Restart => (init(), Cmd.none)
     | Coords(i, j) => {
         let s = model.state->List.mapWithIndex((n, x) =>
           x->List.mapWithIndex((m, y) => {
@@ -268,7 +272,8 @@ let update = (model: model, msg: msg) => {
 }
 
 // This is just a helper function for the view, a simple function that returns a button based on some argument
-let viewButton = (title: string, msg: msg) => button(list{Events.onClick(msg)}, list{text(title)})
+let viewButton = (title: string, msg: msg) =>
+  button(list{Events.onClick(msg), Attributes.class("button")}, list{text(title)})
 
 let subscriptions = _ => {
   Sub.none
@@ -316,8 +321,10 @@ let view = (model: model): Vdom.t<msg> => {
           )
         ),
       ),
+      viewButton("Restart", Restart),
     },
   )
+
   retVal
 }
 

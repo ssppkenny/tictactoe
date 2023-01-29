@@ -496,8 +496,21 @@ function minimaxSearch(m) {
 function update(model, msg) {
   var winnerCoords = model.winnerCoords;
   if (winnerCoords.length !== 0) {
+    if (msg) {
+      return [
+              model,
+              Tea_cmd.none
+            ];
+    } else {
+      return [
+              init(undefined),
+              Tea_cmd.none
+            ];
+    }
+  }
+  if (!msg) {
     return [
-            model,
+            init(undefined),
             Tea_cmd.none
           ];
   }
@@ -585,7 +598,10 @@ function update(model, msg) {
 function viewButton(title, msg) {
   return Tea_html.button(undefined, undefined, {
               hd: Tea_html.Events.onClick(msg),
-              tl: /* [] */0
+              tl: {
+                hd: Tea_html.Attributes.$$class("button"),
+                tl: /* [] */0
+              }
             }, {
               hd: Tea_html.text(title),
               tl: /* [] */0
@@ -664,7 +680,10 @@ function view(model) {
                                                       });
                                           })));
                         }))),
-              tl: /* [] */0
+              tl: {
+                hd: viewButton("Restart", /* Restart */0),
+                tl: /* [] */0
+              }
             });
 }
 

@@ -4,6 +4,12 @@
     left: 45%;
 }
 
+button {
+    width: 300px;
+    height: 50px;
+    margin-top: 50px;
+}
+
 .wrapper {
     border-width: 0px;
     width: 300px;
